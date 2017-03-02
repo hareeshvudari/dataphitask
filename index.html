@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular.min.js"></script>
+    
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.5/angular-messages.min.js"></script>
+      <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <style type="text/css">
+    input[type=text].ng-invalid,input[type=email].ng-invalid,textarea.ng-invalid,input[type=number].ng-invalid,input[type=date].ng-invalid,select.ng-invalid{
+  border: solid 1px red;
+    }
+
+input[type=text].ng-valid,input[type=email].ng-valid,textarea.ng-valid,input[type=number].ng-valid,input[type=date].ng-valid,select.ng-valid{
+  border: solid 1px #090;
+     }
+      .error{
+          color: red;
+      }
+  </style>
+  <title>Patient Details</title>
+
+
+</head>
+
+
+<body ng-app="myApp" ng-controller="AppController as ctrl   ">
+    <div class="container">
+  <form name='frmCustomer' ng-submit="ctrl.submit()" novalidate>
+  <div>
+    <fieldset class='col-lg-12 col-sm-12'>
+      <legend>
+        Patient's Details</legend>
+        <sup>All Fields are Required*</sup>
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="ctrl.user.fname" name="fName" ng-minlength='3' ng-maxlength='30' ng-required='true' placeholder="First Name" />
+          <span ng-hide="frmCustomer.fName.$valid" class="error">Should be in between 3 to 30 letters !</span>
+      </div> 
+        <div class="form-group">
+        <input type="text" class="form-control" ng-model="ctrl.user.lname" name="lName" ng-minlength='3' ng-maxlength='30' ng-required='true' placeholder="Last Name" />
+             <span ng-hide="frmCustomer.lName.$valid" class="error">Should be in between 3 to 30 letters !</span>
+      </div>
+
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="ctrl.user.age" name="age" ng-maxlength='2' ng-pattern="/^[0-9]/" ng-required='true' placeholder="Age" />
+          <p ng-hide="frmCustomer.age.$valid" class="error">please lessthan 100* </p>
+          
+      </div>
+
+      <div class="form-group">
+        <input type="date" class="form-control" ng-model="ctrl.user.dob" name="dob"  ng-required='true' ng-pattern='/^[0-9]/' placeholder="Date of birth" required/>
+           <span ng-show='frmCustomer.dob.$invalid' class="error">Your date format is invalid, please check it again</span>
+      </div>
+
+      <div class="form-group">
+        <select class="form-control" ng-model="ctrl.user.gender" ng-required='true' >
+            <option disabled>Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+            <option value="other">Other</option>
+          </select>
+      </div>
+
+      <div class="form-group">
+        <input type="text" class="form-control" ng-model="ctrl.user.mobile" name="phone" ng-maxlength='10' ng-minlength="10" ng-pattern="/^[0-9]/"  ng-required='true' placeholder="Mobile Number" />
+          <p ng-hide="frmCustomer.phone.$valid" class="error">Not a valid number!</p>
+      </div>
+
+      <div class="form-group">
+        <textarea rows="3" class="form-control" ng-model="ctrl.user.about" name="txtName" ng-minlength='5' ng-maxlength='1000' ng-required='true' placeholder="Tell us about yourself"></textarea>
+      </div>
+      <div class="form-group">
+           <input type="submit"  value="{{!ctrl.user.id ? 'Add' : 'Update'}}" class="btn btn-success btn-sm" ng-disabled="!frmCustomer.$valid">
+          
+     <button type="button" ng-click="ctrl.reset()" class="btn btn-warning btn-sm" ng-disabled="frmCustomer.$pristine">Reset Form</button>
+          <hr>
+      </div>
+    </fieldset>
+  </div>
+
+</form>
+          </div>
+    <div class="container-fluid">
+  <div class="">
+      
+              <h3>Please search Patient Details</h3>
+       <div class="form-group col-md-offset-5">
+          <input ng-model="fname" class="form-control" placeholder="Search">
+          </div>
+          </div>
+    <hr>
+          <div class="panel panel-default">
+                <!-- Default panel contents -->
+              <div class="panel-heading"><span class="lead">List of Patients </span></div>
+              <div class="tablecontainer">
+                  <table class="table table-hover">
+                      <thead>
+                          <tr>
+                              <th>ID.</th>
+                              <th>FirstName</th>
+                              <th>LastName</th>
+                              <th>Age</th>
+                              <th>DOB</th>
+                              <th>Gender</th>
+                              <th>Mobile</th>
+                              <th>About</th>
+                              <th></th>
+                              <th></th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <tr ng-repeat="u in ctrl.users | filter:fname ">
+                              <td><span ng-bind="u.id"></span></td>
+                              <td><span ng-bind="u.fname"></span></td>
+                              <td><span ng-bind="u.lname"></span></td>
+                              <td><span ng-bind="u.age"></span></td>
+                              <td><span ng-bind="u.dob"></span></td>
+                              <td><span ng-bind="u.gender"></span></td>
+                              <td><span ng-bind="u.mobile"></span></td>
+                              <td><span ng-bind="u.about"></span></td>
+                              <td>
+                              <button type="button" ng-click="ctrl.edit(u.id)" class="btn btn-success btn-block">Edit</button></td>  <td><button type="button" ng-click="ctrl.remove(u.id)" class="btn btn-danger btn-block">Remove</button>
+                              </td>
+                          </tr>
+                      </tbody>
+                  </table>
+              </div>
+          </div>
+   
+        <script>
+          angular.module('myApp', [])
+          .controller('AppController', ['$scope', function($scope) {
+              var self = this;
+              self.user={id:null, fname:'', lname:'', age:'', dob:'', gender:'', mobile:'', about:''};
+              self.id = 4;
+               
+              self.users = [// In future posts, we will get it from server using service
+                      {id:1, fname: 'Hareesh', lname: 'Vudari', age: '23',dob:'2/05/1992', gender:'male',mobile:'9666112233',about:'heavy headache '},{id:2, fname: 'Mahesh', lname: 'Kalyanam', age: '25',dob:'2/05/1992', gender:'male',mobile:'8106401122',about:'stomachpain '},{id:3, fname: 'Sam', lname: 'Vulli', age: '20',dob:'2/09/1997', gender:'female',mobile:'2255663311',about:'heavy bodypain '}
+                     
+              ];
+               
+              self.submit = function() {
+                  alert("patient's record added");
+                  if(self.user.id === null){
+                      self.user.id = self.id++;
+                      console.log('Saving New User', self.user);    
+                      self.users.push(self.user);//Or send to server, we will do it in when handling services
+                  }else{
+                      for(var i = 0; i < self.users.length; i++){
+                          if(self.users[i].id === self.user.id) {
+                            self.users[i] = self.user;
+                            break;
+                          }
+                      }
+                     console.log('User updated with id ', self.user.id);
+                  }
+                  self.reset();
+              };
+               
+              self.edit = function(id){
+                  console.log('id to be edited', id);
+                  for(var i = 0; i < self.users.length; i++){
+                      if(self.users[i].id === id) {
+                         self.user = angular.copy(self.users[i]);
+                         break;
+                      }
+                  }
+              }
+               
+              self.remove = function(id){
+                  console.log('id to be deleted', id);
+                  for(var i = 0; i < self.users.length; i++){
+                      if(self.users[i].id === id) {
+                         self.users.splice(i,1);
+                         if(self.user.id === id){//It is shown in form, reset it.
+                            self.reset();
+                         }
+                         break;
+                      }
+                  }
+              }
+               
+              self.reset = function(){
+                  self.user={id:null, fname:'', lname:'', age:'', dob:'', gender:'', mobile:'', about:''};
+                  $scope.frmCustomer.$setPristine(); //reset Form
+              }
+ 
+      }]);
+  </script>
+
+</body>
+
+</html>
